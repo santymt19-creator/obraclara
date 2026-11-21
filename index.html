@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ObraClara · Portal del titular de la entidad</title>
+<style>
+  :root{
+    --bg:#F4F6F8; --card:#FFFFFF; --ink:#0F1B2D; --muted:#556070; --line:#E3E8EE;
+    --brand:#0B6E5B; --brand-bg:#E6F4EF; --warn:#8A5300; --warn-bg:#FFF4E0;
+    --bad:#A12A2A; --bad-bg:#FDECEC; --info:#1F4E99; --info-bg:#E8F0FB; --navy:#0F1B2D; --navy2:#1E2E45;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",system-ui,sans-serif;font-size:15px}
+  a{color:var(--brand)}
+  .layout{display:flex;flex-wrap:wrap;min-height:100vh}
+  aside.menu{flex:1 1 230px;background:var(--navy);color:#fff;padding:22px 14px;display:flex;flex-direction:column;gap:18px}
+  .logo{font-size:22px;font-weight:700;padding:0 8px;letter-spacing:-.3px}
+  .logo small{display:block;font-size:12px;font-weight:500;color:#C9D3DF;letter-spacing:0}
+  .menu label{font-size:12px;color:#C9D3DF;padding:0 8px}
+  .menu select{width:100%;min-height:44px;border-radius:10px;border:0;padding:0 10px;font:inherit;background:var(--navy2);color:#fff}
+  .menu nav{display:flex;flex-direction:column;gap:4px}
+  .menu nav button{all:unset;cursor:pointer;min-height:44px;padding:0 12px;border-radius:10px;color:#C9D3DF;display:flex;align-items:center;gap:10px;font-size:14px}
+  .menu nav button[aria-current="page"]{background:var(--navy2);color:#fff;font-weight:600}
+  .menu nav button:focus-visible{outline:2px solid #fff}
+  .badge-ej{margin:0 8px;font-size:12px;background:#F5C46B;color:#3D2A00;border-radius:8px;padding:6px 8px;font-weight:600}
+  main{flex:999 1 560px;min-width:0;padding:26px clamp(14px,3vw,40px);display:flex;flex-direction:column;gap:22px}
+  header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+  header.top h1{margin:0;font-size:28px;letter-spacing:-.4px}
+  .sub{color:var(--muted);font-size:14px}
+  .btn{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #C9D3DF;background:#fff;color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+  .card{background:var(--card);border-radius:16px;padding:18px;box-shadow:0 1px 2px rgba(15,27,45,.08)}
+  .kpi .lbl{font-size:13px;color:var(--muted)}
+  .kpi .val{font-size:28px;font-weight:700;margin-top:4px}
+  .bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:8px}
+  .bar>div{height:8px;background:var(--brand)}
+  .pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
+  .ok{background:#E3F3EA;color:#0B6E4F} .warn{background:var(--warn-bg);color:var(--warn)}
+  .bad{background:var(--bad-bg);color:var(--bad)} .info{background:var(--info-bg);color:var(--info)}
+  .lila{background:#EFEAFB;color:#5B3E96} .gris{background:#ECEEF1;color:#46505C}
+  h2{margin:0 0 12px;font-size:18px}
+  .tbl-wrap{overflow-x:auto}
+  table{width:100%;min-width:720px;border-collapse:collapse;font-size:14px}
+  th{text-align:left;color:var(--muted);font-size:12px;font-weight:600;padding:10px 8px;border-bottom:1px solid var(--line)}
+  td{padding:11px 8px;border-bottom:1px solid #EEF1F4;vertical-align:middle}
+  td.num,th.num{text-align:right}
+  .star{all:unset;cursor:pointer;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:#9AA6B5}
+  .star[aria-pressed="true"]{color:#C77700}
+  .star:focus-visible{outline:2px solid var(--brand)}
+  .tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+  .tools input,.tools select{min-height:42px;border-radius:10px;border:1px solid #C9D3DF;padding:0 12px;font:inherit;font-size:14px;background:#fff}
+  .list{display:flex;flex-direction:column;gap:10px}
+  .item{display:flex;gap:12px;align-items:flex-start}
+  .item .ttl{font-weight:600}
+  .item .meta{font-size:13px;color:var(--muted)}
+  .sec{border-left:0}
+  .rep-sec{margin-top:6px}
+  .rep-sec h3{margin:14px 0 8px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .rep-sec ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+  .empty{color:var(--muted);font-size:14px;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{all:unset;cursor:pointer;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid #C9D3DF;background:#fff;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+  .chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+  .chip:focus-visible{outline:2px solid var(--brand)}
+  .chip .n{font-weight:500;opacity:.75}
+  .news{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #EEF1F4}
+  .news:last-child{border-bottom:0}
+  .ava{flex:none;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px}
+  .news a.t{color:var(--ink);text-decoration:none;font-weight:600;font-size:15px;line-height:1.35}
+  .news a.t:hover{color:var(--brand);text-decoration:underline}
+  .news .meta{font-size:12px;color:var(--muted);margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .nuevo{background:#E8590C;color:#fff;border-radius:6px;font-size:11px;font-weight:700;padding:2px 6px}
+  .dia{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em;margin:14px 0 2px;text-transform:uppercase}
+  .destacada{background:var(--navy);color:#fff;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px}
+  .destacada a{color:#fff;text-decoration:none;font-size:20px;font-weight:700;line-height:1.3}
+  .destacada a:hover{text-decoration:underline}
+  .destacada .meta{color:#C9D3DF;font-size:13px}
+  .search{min-height:44px;border-radius:12px;border:1px solid #C9D3DF;padding:0 14px;font:inherit;font-size:15px;width:min(100%,420px);background:#fff}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;display:none}
+  @media print{
+    aside.menu,.no-print,.tools{display:none!important}
+    body{background:#fff}
+    main{padding:0}
+    .card{box-shadow:none;border:1px solid #ccc}
+  }
+
+  :root{
+    --bg:#F3F4F2; --card:#FFFFFF; --ink:#1F2A26; --muted:#58615D; --line:#E2E6E3;
+    --brand:#007A49; --brand-bg:#E3F3EA; --warn:#7A4E00; --warn-bg:#FFF2DB;
+    --bad:#A12A2A; --bad-bg:#FDECEC; --info:#1F4E99; --info-bg:#E8F0FB;
+    --navy:#003A2A; --navy2:#0B4D39; --gold:#C5891F; --gold-ink:#2B1D00;
+  }
+  :root, :root[data-tema="azul"]{
+    --bg:#F2F4F8; --brand:#1D5FA8; --brand-bg:#E7F0FB; --navy:#0F2A4A; --navy2:#1C3D66;
+    --gold:#F2A541; --gold-ink:#2B1A00; --cab-sub:#B9C9DE; --cab-borde:#7F9BBD;
+  }
+  :root[data-tema="verde"]{
+    --bg:#F3F4F2; --brand:#007A49; --brand-bg:#E3F3EA; --navy:#003A2A; --navy2:#0B4D39;
+    --gold:#C5891F; --gold-ink:#2B1D00; --cab-sub:var(--cab-sub); --cab-borde:#6F9C88;
+  }
+  :root[data-tema="vino"]{
+    --bg:#F6F2F3; --brand:#8E2442; --brand-bg:#F8E8EE; --navy:#4A1426; --navy2:#66203A;
+    --gold:#D9A441; --gold-ink:#2B1A00; --cab-sub:#E2C4CE; --cab-borde:#A86A80;
+  }
+  [hidden]{display:none!important}
+  body{background:var(--bg)}
+  .verde{color:var(--brand)}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 clamp(14px,3vw,32px)}
+  .topbar{background:#fff;border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px;flex-wrap:wrap}
+  .marca{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;color:var(--navy);letter-spacing:-.3px}
+  .marca small{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  .usuario{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+  .usuario b{color:var(--ink)}
+  .cabecera{background:var(--navy);color:#fff;border-bottom:4px solid var(--gold)}
+  .cabecera .wrap{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px;padding-top:26px;padding-bottom:22px}
+  .cabecera .tipo{font-size:13px;color:var(--cab-sub);letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+  .cabecera h2{margin:4px 0 0;font-size:clamp(22px,3vw,32px);line-height:1.15;color:#fff}
+  .cabecera .mia{display:inline-block;margin-top:8px;background:var(--gold);color:var(--gold-ink);font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px}
+  .cambio{display:flex;flex-direction:column;gap:6px;min-width:min(100%,340px)}
+  .cambio label{font-size:12px;color:var(--cab-sub);font-weight:600}
+  .cambio .fila{display:flex;gap:8px;flex-wrap:wrap}
+  .cambio input{flex:1;min-width:200px;min-height:44px;border-radius:10px;border:0;padding:0 12px;font:inherit;font-size:14px}
+  .cambio button{min-height:44px;border-radius:10px;border:1px solid var(--cab-borde);background:transparent;color:#fff;font:inherit;font-size:13px;font-weight:600;padding:0 12px;cursor:pointer}
+  .ticker{background:var(--gold);color:var(--gold-ink);overflow:hidden}
+  .ticker .wrap{display:flex;align-items:center;gap:14px;min-height:44px}
+  .ticker .lbl{flex:none;background:var(--navy);color:#fff;font-size:12px;font-weight:800;letter-spacing:.06em;border-radius:6px;padding:4px 8px}
+  .ticker .vent{overflow:hidden;flex:1;min-width:0}
+  .ticker .cinta{display:inline-flex;gap:40px;white-space:nowrap;animation:correr 60s linear infinite;font-weight:700;font-style:italic;font-size:14px}
+  .ticker .cinta a{color:var(--gold-ink);text-decoration:none}
+  .ticker .cinta a:hover{text-decoration:underline}
+  .ticker:hover .cinta{animation-play-state:paused}
+  @keyframes correr{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){.ticker .cinta{animation:none}}
+  .accesos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:-1px;padding:18px 0}
+  .acceso{all:unset;cursor:pointer;background:#fff;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 2px rgba(0,58,42,.1);border-bottom:4px solid transparent;font-weight:700;font-size:15px;color:var(--navy);min-height:44px}
+  .acceso svg{flex:none;color:var(--brand)}
+  .acceso[aria-current="page"]{border-bottom-color:var(--brand);background:var(--brand-bg)}
+  .acceso:focus-visible{outline:2px solid var(--brand)}
+  main{display:flex;flex-direction:column;gap:22px;padding:0 0 40px;flex:none;min-width:0}
+  header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+  header.top h1{margin:0;font-size:28px;font-weight:400;letter-spacing:-.3px;color:var(--ink)}
+  header.top h1 .verde{font-weight:800}
+  .pie{background:var(--navy);color:var(--cab-sub);font-size:13px}
+  .pie .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+  .pie b{color:#fff}
+  /* acceso */
+  .login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy);padding:20px;box-sizing:border-box}
+  .login form{background:#fff;border-radius:18px;padding:28px;width:min(100%,380px);display:flex;flex-direction:column;gap:14px;border-top:6px solid var(--gold)}
+  .login h1{margin:0;font-size:26px;color:var(--navy)}
+  .login label{font-size:13px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+  .login input{min-height:46px;border-radius:10px;border:1px solid #C9D3CE;padding:0 12px;font:inherit;font-size:16px}
+  .login .err{color:var(--bad);font-size:13px;min-height:18px;margin:0}
+  .btn.primary{background:var(--brand);border-color:var(--brand)}
+
+  /* ranking e historia */
+  .rks{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+  .rk{background:var(--brand-bg);border-radius:14px;padding:12px;text-align:center}
+  .rk-n{font-size:30px;font-weight:800;color:var(--brand);line-height:1}
+  .rk-n span{font-size:14px;font-weight:600;color:var(--muted)}
+  .rk-t{font-size:12px;font-weight:600;color:var(--muted);margin-top:4px}
+  .vecinas{display:flex;flex-direction:column;gap:4px}
+  .vec{all:unset;cursor:pointer;display:grid;grid-template-columns:36px minmax(0,1.3fr) minmax(60px,1fr) 52px;gap:8px;align-items:center;padding:5px 6px;border-radius:8px;font-size:13px}
+  .vec:hover{background:var(--brand-bg)}
+  .vec:focus-visible{outline:2px solid var(--brand)}
+  .vec.mia{background:var(--gold);color:var(--gold-ink);font-weight:700;cursor:default}
+  .vp{color:var(--muted);font-weight:700;text-align:right}
+  .vec.mia .vp{color:var(--gold-ink)}
+  .vn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vb{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+  .vb span{display:block;height:8px;background:var(--brand);transform-origin:left;animation:llenar .9s ease both}
+  .vv{text-align:right;font-variant-numeric:tabular-nums}
+  .hist{display:flex;align-items:flex-end;gap:6px;height:220px;padding-top:10px}
+  .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0;cursor:default}
+  .cbar{width:100%;max-width:44px;background:var(--brand-bg);border-radius:6px 6px 0 0;display:flex;align-items:flex-end;transform-origin:bottom;animation:crecer .9s cubic-bezier(.2,.7,.2,1) both}
+  .cdev{width:100%;background:var(--brand);border-radius:6px 6px 0 0}
+  .col:hover .cbar{filter:brightness(.92)}
+  .cp{font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px}
+  .cy{font-size:11px;color:var(--muted);margin-top:4px}
+  @keyframes crecer{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  @media (prefers-reduced-motion: reduce){.cbar,.vb span{animation:none}}
+
+  /* gráficos */
+  .graficos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:20px}
+  .graf{width:100%;height:auto;display:block}
+  .graf .gl{stroke:var(--line);stroke-width:1}
+  .graf .ax{font-size:11px;fill:var(--muted)}
+  .graf .gb{fill:var(--brand);opacity:.85;transform-box:fill-box;transform-origin:bottom;animation:crecer .8s cubic-bezier(.2,.7,.2,1) both}
+  .graf .gb:hover{opacity:1}
+  .graf .gl1{fill:none;stroke:var(--gold);stroke-width:3;stroke-linejoin:round}
+  .graf .gl1-p{fill:#fff;stroke:var(--gold);stroke-width:2.5}
+  .graf .gl2{fill:none;stroke:#8B95A3;stroke-width:2;stroke-dasharray:5 4}
+  .graf .gl2-p{fill:#fff;stroke:#8B95A3;stroke-width:2}
+  .leyenda{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted);margin-top:6px}
+  .leyenda i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .leyenda .lb{background:var(--brand)} .leyenda .ll{background:var(--gold);height:3px;vertical-align:3px} .leyenda .ll2{border-top:2px dashed #8B95A3;height:0;vertical-align:3px}
+  tr.fila-sel td{background:var(--brand-bg)}
+  @media (prefers-reduced-motion: reduce){.graf .gb{animation:none}}
+  .sel-anio{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted)}
+  .sel-anio select{font:inherit;font-weight:700;color:var(--ink);padding:7px 30px 7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);cursor:pointer}
+  button.rk{font:inherit;cursor:pointer;border:2px solid transparent;text-align:center}
+  button.rk.sel{border-color:var(--brand)}
+  .rk-n,.rk-t{display:block}
+  .vn small{color:var(--muted);font-weight:400}
+  .vec-sep{text-align:center;color:var(--muted);line-height:1}
+  .recordar{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+  /* animaciones */
+  @keyframes aparecer{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes llenar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  @keyframes latido{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+  .animar > *{animation:aparecer .5s cubic-bezier(.2,.7,.2,1) both}
+  .animar .news{animation:aparecer .45s ease both}
+  .bar>div{transform-origin:left;animation:llenar 1s cubic-bezier(.2,.7,.2,1) both .2s}
+  .card,.acceso,.destacada,.ir{transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
+  .ir{cursor:pointer}
+  .ir:hover,.acceso:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(15,42,74,.14)}
+  .acceso:hover svg{animation:latido .6s ease}
+  button.pill{border:0;cursor:pointer;font:inherit;font-size:12px;font-weight:700}
+  button.pill:hover{filter:brightness(.95);transform:translateY(-1px)}
+  .alerta{all:unset;display:block;cursor:pointer;border-radius:10px;padding:6px;margin:-6px}
+  .alerta:hover{background:var(--brand-bg)}
+  .alerta:focus-visible{outline:2px solid var(--brand)}
+  .nuevo{animation:latido 1.6s ease infinite}
+  /* temas de color: selector */
+  .temas{display:flex;gap:6px;align-items:center}
+  .tema{all:unset;cursor:pointer;width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #C9D3DF}
+  .tema[aria-pressed="true"]{box-shadow:0 0 0 2px var(--brand)}
+  .tema:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+  /* fotos de noticias */
+  .thumb{position:relative;flex:none;width:132px;height:88px;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff}
+  .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+  .news:hover .thumb img{transform:scale(1.08)}
+  .ilus-obras{background:linear-gradient(135deg,#1D5FA8,#0F2A4A)}
+  .ilus-control{background:linear-gradient(135deg,#A12A2A,#5A1420)}
+  .ilus-gestion{background:linear-gradient(135deg,#0E7C66,#0F3D35)}
+  .ilus-emerg{background:linear-gradient(135deg,#E07A2F,#8A3B0E)}
+  .ilus-otros{background:linear-gradient(135deg,#5B6B7F,#2C3644)}
+  .destacada{position:relative;overflow:hidden;min-height:220px;justify-content:flex-end;background-size:cover;background-position:center}
+  .destacada::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.78) 100%)}
+  .destacada > *{position:relative}
+  .destacada .ico{position:absolute;right:24px;top:20px;opacity:.25}
+  @media (max-width:560px){.thumb{width:96px;height:72px}}
+  @media (prefers-reduced-motion: reduce){.animar > *,.animar .news,.bar>div,.nuevo,.acceso:hover svg{animation:none}.ir:hover,.acceso:hover{transform:none}}
+
+  @media print{ .topbar,.cabecera,.ticker,.accesos,.pie{display:none!important} }
+</style>
+</head>
+<body>
+<div id="login" class="login" hidden>
+  <form id="formLogin" autocomplete="off">
+    <div class="marca"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/></svg><div>ObraClara<small>Portal del titular</small></div></div>
+    <h1>Ingresar</h1>
+    <label>DNI<input id="dni" inputmode="numeric" maxlength="12" required></label>
+    <label>Clave (si le asignaron una)<input id="clave" type="password"></label>
+    <p class="err" id="errLogin" role="alert"></p>
+    <button class="btn primary" type="submit">Ingresar</button>
+    <p class="sub" style="margin:0;font-size:12px">El acceso lo asigna el administrador de ObraClara.</p>
+  </form>
+</div>
+<div id="app" hidden>
+  <div class="topbar"><div class="wrap">
+    <div class="marca"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/></svg><div>ObraClara<small>Portal del titular</small></div></div>
+    <div class="usuario"><div class="temas" role="group" aria-label="Color del portal"><button class="tema" data-t="azul" aria-label="Tema azul" style="background:#0F2A4A"></button><button class="tema" data-t="verde" aria-label="Tema verde" style="background:#003A2A"></button><button class="tema" data-t="vino" aria-label="Tema vino" style="background:#4A1426"></button></div><span id="quien"></span><button class="btn" id="salir" type="button">Salir</button></div>
+  </div></div>
+  <div class="cabecera"><div class="wrap">
+    <div><div class="tipo" id="cabTipo"></div><h2 id="cabNombre"></h2><span class="mia" id="cabMia" hidden>Su entidad</span></div>
+    <div class="cambio no-print">
+      <label for="buscaEnt">Consultar otra entidad</label>
+      <div class="fila"><input id="buscaEnt" list="listaEnt" placeholder="Escriba el nombre: Huari, Huaraz…"><datalist id="listaEnt"></datalist>
+      <button type="button" id="volver" hidden>Volver a la mía</button></div>
+    </div>
+  </div></div>
+  <div class="ticker no-print" id="ticker" hidden><div class="wrap"><span class="lbl">AL DÍA</span><div class="vent"><div class="cinta" id="cinta"></div></div></div></div>
+  <div class="wrap">
+    <nav class="accesos no-print" aria-label="Secciones">
+      <button class="acceso" data-tab="resumen"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z"/></svg>Resumen</button>
+      <button class="acceso" data-tab="obras"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/></svg>Obras por lugar</button>
+      <button class="acceso" data-tab="semanal"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Reporte semanal</button>
+      <button class="acceso" data-tab="pp"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="8" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15 14.5c2.8 0 5 2 5 5"/></svg>Presupuesto participativo</button>
+      <button class="acceso" data-tab="noticias"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13v16H6a2 2 0 0 1-2-2z"/><path d="M17 8h3v10a2 2 0 0 1-2 2"/><path d="M8 8h5M8 12h5M8 16h3"/></svg>Noticias</button>
+    </nav>
+    <main id="main" aria-live="polite"></main>
+  </div>
+  <footer class="pie"><div class="wrap"><span><b>ObraClara</b> · Portal del titular de la entidad (alcaldes y gobernadores regionales)</span><span id="pieFuente"></span></div></footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="datos/acceso.js"></script>
+<script src="datos/datos.enc.js"></script>
+<script>
+/* Modo web (GitHub Pages): los datos vienen cifrados; se descifran en el navegador con DNI + clave. */
+(function(){
+  if(window.OBRACLARA_DATOS || !window.OC_ACC || !window.OC_ENC) return;
+  var A = window.OC_ACC;
+  function b64(s){ var b = atob(s), u = new Uint8Array(b.length); for(var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+  function b64e(u){ var s = ""; for(var i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s); }
+  function hex(u){ return Array.prototype.map.call(u, function(x){ return ("0" + x.toString(16)).slice(-2); }).join(""); }
+  var S = crypto.subtle;
+  function ctr(llave, iv, datos){ return S.importKey("raw", llave, "AES-CTR", false, ["decrypt"]).then(function(k){ return S.decrypt({name:"AES-CTR", counter:iv, length:64}, k, datos); }).then(function(r){ return new Uint8Array(r); }); }
+  function abrirDatos(llave){
+    var e = window.OC_ENC.datos;
+    return ctr(llave, b64(e.i), b64(e.d)).then(function(z){
+      return new Response(new Blob([z]).stream().pipeThrough(new DecompressionStream("deflate"))).text();
+    }).then(function(t){ return JSON.parse(t); });
+  }
+  function arrancar(llave, perfil){
+    return abrirDatos(llave).then(function(D){
+      perfil.h = "web"; D.usuarios = [perfil];
+      window.OBRACLARA_DATOS = D; window.OC_WEB_USUARIO = perfil;
+      window.__ocMain && window.__ocMain();
+    });
+  }
+  function guardar(llave, perfil, recordar){
+    var v = JSON.stringify({k: b64e(llave), p: perfil});
+    try{ sessionStorage.setItem("oc_web", v); if(recordar) localStorage.setItem("oc_web", v); }catch(e){}
+  }
+  window.__ocWebSalir = function(){ try{ sessionStorage.removeItem("oc_web"); localStorage.removeItem("oc_web"); }catch(e){} location.reload(); };
+  window.__ocWebPendiente = true;
+  document.addEventListener("DOMContentLoaded", function(){
+    var g = null; try{ g = sessionStorage.getItem("oc_web") || localStorage.getItem("oc_web"); }catch(e){}
+    if(g){ try{ g = JSON.parse(g); arrancar(b64(g.k), g.p).catch(function(){ window.__ocWebSalir(); }); return; }catch(e){} }
+    var lg = document.getElementById("login"), f = document.getElementById("formLogin"), err = document.getElementById("errLogin"), bt = f.querySelector("button");
+    var rec = document.createElement("label"); rec.className = "recordar"; rec.innerHTML = '<input type="checkbox" id="recordar"> Recordarme en este equipo';
+    bt.parentNode.insertBefore(rec, bt);
+    lg.hidden = false; document.getElementById("dni").focus();
+    f.addEventListener("submit", function(ev){
+      ev.preventDefault(); ev.stopImmediatePropagation();
+      if(!S || !window.DecompressionStream){ err.textContent = "Este navegador es muy antiguo. Use Chrome, Edge o Safari actualizados."; return; }
+      var dni = document.getElementById("dni").value.replace(/\D/g, ""), clave = document.getElementById("clave").value.trim();
+      if(!dni){ err.textContent = "Ingrese su DNI."; return; }
+      bt.disabled = true; bt.textContent = "Verificando..."; err.textContent = "";
+      var cred = new TextEncoder().encode(dni + ":" + clave);
+      S.importKey("raw", cred, "PBKDF2", false, ["deriveBits"]).then(function(base){
+        return S.deriveBits({name:"PBKDF2", hash:"SHA-256", salt:b64(A.s), iterations:A.n}, base, 256);
+      }).then(function(kd){
+        kd = new Uint8Array(kd);
+        return S.digest("SHA-256", kd).then(function(h){
+          var u = A.u[hex(new Uint8Array(h)).slice(0, 24)];
+          if(!u) throw new Error("credenciales");
+          return ctr(kd, b64(u[0]), b64(u[1]));
+        });
+      }).then(function(p){
+        var llave = p.slice(0, 32), perfil = JSON.parse(new TextDecoder().decode(p.slice(32)));
+        guardar(llave, perfil, document.getElementById("recordar").checked);
+        bt.textContent = "Abriendo datos...";
+        return arrancar(llave, perfil);
+      }).catch(function(e){
+        bt.disabled = false; bt.textContent = "Ingresar";
+        err.textContent = e && e.message === "credenciales" ? "DNI o clave incorrectos. Si no tiene acceso, comuníquese con el administrador." : "No se pudieron abrir los datos: " + (e && e.message || e);
+      });
+    }, true);
+  });
+})();
+</script>
+<script>
+window.__ocMain = function(){
+  "use strict";
+  var D = window.OBRACLARA_DATOS;
+  var WEB = !!window.OC_WEB_USUARIO;
+  var main = document.getElementById("main");
+  if(!D){
+    if(window.__ocWebPendiente) return;
+    document.body.innerHTML = '<div class="login"><div class="card" style="max-width:420px"><h2>No se encontraron los datos</h2><p class="empty">Ejecute <b>ACTUALIZAR OBRACLARA.bat</b> para generar <b>datos/datos.js</b> desde SIRCI.</p></div></div>';
+    return;
+  }
+  // ---------- utilidades ----------
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function soles(n){ return "S/" + Math.round(n || 0).toLocaleString("es-PE"); }
+  function solesM(n){ return Math.abs(n) >= 1e6 ? "S/" + (n/1e6).toLocaleString("es-PE", {maximumFractionDigits:1}) + " M" : soles(n); }
+  function fecha(iso){ if(!iso) return "—"; var p = iso.split("-"); return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : p.length === 2 ? p[1] + "/" + p[0] : iso; }
+  function pct(v){ return v == null ? "—" : v + "%"; }
+  function diasEntre(a, b){ return Math.round((new Date(b) - new Date(a)) / 86400000); }
+  function mesesDesde(ym, hoy){ if(!ym) return 999; return (+hoy.slice(0,4) - +ym.slice(0,4)) * 12 + (+hoy.slice(5,7) - +ym.slice(5,7)); }
+  function store(k, v){ try{ if(v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } }
+  function toast(msg){ var t = document.getElementById("toast"); t.textContent = msg; t.style.display = "block"; setTimeout(function(){ t.style.display = "none"; }, 2500); }
+  var ESTADO_CLASE = { "En ejecución":"ok", "Paralizada":"bad", "Culminada":"info", "Por liquidar":"info", "Sin ejecución este año":"warn",
+                       "Preinversión":"lila", "Expediente sin ejecutar":"lila", "Cerrada":"gris", "Desactivada":"gris" };
+  var ESTADO_ORDEN = { "Paralizada":0, "En ejecución":1, "Expediente sin ejecutar":2, "Preinversión":3, "Sin ejecución este año":4,
+                       "Por liquidar":5, "Culminada":6, "Cerrada":7, "Desactivada":8 };
+  // grupos para consultar por lugar
+  var GRUPOS = [["En ejecución", ["En ejecución","Paralizada"], "ok"], ["Preinversión", ["Preinversión","Expediente sin ejecutar"], "lila"],
+                ["Por cerrar", ["Por liquidar","Culminada","Sin ejecución este año"], "info"], ["Cerradas", ["Cerrada"], "gris"], ["Desactivadas", ["Desactivada"], "gris"]];
+  function sinTilde(x){ return String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+  function enLugar(o, l){
+    if(!l) return true;
+    l = sinTilde(l);
+    return sinTilde(o.nombre).indexOf(l) >= 0 || sinTilde(o.distrito).indexOf(l) >= 0 || (o.lugares || []).some(function(x){ return sinTilde(x).indexOf(l) >= 0; });
+  }
+  var MAX_FILAS = 200, MAX_LISTA = 15;
+  // SHA-256 (para comparar DNI + clave sin guardarlos en texto plano)
+  function sha256(ascii){
+    function r(v, a){ return (v >>> a) | (v << (32 - a)); }
+    var mp = Math.pow, mw = mp(2, 32), res = "", words = [], bl = ascii.length * 8, h = [], k = [], pc = 0, isC = {};
+    for(var c = 2; pc < 64; c++){ if(!isC[c]){ for(var i = 0; i < 313; i += c) isC[i] = c; h[pc] = (mp(c, .5) * mw) | 0; k[pc++] = (mp(c, 1/3) * mw) | 0; } }
+    h = h.slice(0, 8);
+    ascii += "\x80"; while(ascii.length % 64 - 56) ascii += "\x00";
+    for(i = 0; i < ascii.length; i++){ var j = ascii.charCodeAt(i); words[i >> 2] |= j << ((3 - i) % 4) * 8; }
+    words[words.length] = ((bl / mw) | 0); words[words.length] = bl;
+    for(j = 0; j < words.length;){
+      var w = words.slice(j, j += 16), oh = h; h = h.slice(0, 8);
+      for(i = 0; i < 64; i++){
+        var w15 = w[i - 15], w2 = w[i - 2], a = h[0], e = h[4];
+        var t1 = h[7] + (r(e, 6) ^ r(e, 11) ^ r(e, 25)) + ((e & h[5]) ^ ((~e) & h[6])) + k[i] +
+          (w[i] = (i < 16) ? w[i] : (w[i - 16] + (r(w15, 7) ^ r(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (r(w2, 17) ^ r(w2, 19) ^ (w2 >>> 10))) | 0);
+        var t2 = (r(a, 2) ^ r(a, 13) ^ r(a, 22)) + ((a & h[1]) ^ (a & h[2]) ^ (h[1] & h[2]));
+        h = [(t1 + t2) | 0].concat(h); h[4] = (h[4] + t1) | 0;
+      }
+      for(i = 0; i < 8; i++) h[i] = (h[i] + oh[i]) | 0;
+    }
+    for(i = 0; i < 8; i++) for(j = 3; j + 1; j--){ var b = (h[i] >> (j * 8)) & 255; res += ((b < 16) ? 0 : "") + b.toString(16); }
+    return res;
+  }
+  function utf8(s){ return unescape(encodeURIComponent(s)); }
+
+  // ---------- estado ----------
+  var entidades = D.entidades || [];
+  var entPorId = {}; entidades.forEach(function(e){ entPorId[e.id] = e; });
+  var usuarios = D.usuarios || [];
+  var favs = [];
+  try{ favs = JSON.parse(store("oc_favs") || "[]"); }catch(e){ favs = []; }
+  var state = { rkTipo:"P", rkAnio:"", rkAmbito:"prov", rkTodos:false, lugar:"", nNivel:"todo", nTema:"", nQ:"", nVisto:store("oc_news_visto"), entidad:null, tab:"resumen", filtro:"", estado:"", favs:favs, user:null };
+  var vistoGuardado = false;
+
+  function ent(){ return entidades.filter(function(e){ return e.id === state.entidad; })[0]; }
+  function obrasDe(semana){ return ((D.semanas[semana] || {}).obras || []).filter(function(o){ return o.entidad === state.entidad; }); }
+  function esFav(cui){ return state.favs.indexOf(cui) >= 0; }
+  function toggleFav(cui){
+    if(esFav(cui)) state.favs = state.favs.filter(function(c){ return c !== cui; }); else state.favs.push(cui);
+    store("oc_favs", JSON.stringify(state.favs)); render();
+  }
+  function fuente(){
+    var f = D.fuente || {};
+    return D.ejemplo ? "Datos de ejemplo" : "MEF vía SIRCI: " + esc(f.sirci || "—") + " · INFOBRAS: " + esc(f.infobras || "—");
+  }
+
+  // ---------- reporte semanal ----------
+  function reporte(){
+    var act = obrasDe("actual"), ant = {}, hayAnt = !!D.semanas.anterior.fecha;
+    obrasDe("anterior").forEach(function(o){ ant[o.cui] = o; });
+    var hayIb = act.some(function(o){ return o.infobras_ant != null; });
+    var r = { hayAnt:hayAnt, hayIb:hayIb, avanzaron:[], sinAvance:[], reactivadas:[], paralizadas:[], nuevas:[], infobrasSi:[], infobrasNo:[] };
+    act.forEach(function(o){
+      var p = ant[o.cui];
+      if(hayAnt){
+        if(!p){ r.nuevas.push(o); }
+        else{
+          var d = (o.fisico != null && p.fisico != null) ? o.fisico - p.fisico : 0;
+          if(p.estado === "Paralizada" && o.estado !== "Paralizada") r.reactivadas.push(o);
+          if(o.estado === "Paralizada" && p.estado !== "Paralizada") r.paralizadas.push(o);
+          if(d > 0) r.avanzaron.push({ o:o, d:d });
+          else if(o.estado === "En ejecución" && o.fisico != null && o.fisico < 100) r.sinAvance.push(o);
+        }
+      }
+      if(o.estado === "En ejecución" || o.estado === "Paralizada"){
+        if(o.infobras_ant != null && o.infobras && o.infobras > o.infobras_ant) r.infobrasSi.push(o);
+        else r.infobrasNo.push(o);
+      }
+    });
+    r.avanzaron.sort(function(a, b){ return b.d - a.d; });
+    r.sinAvance.sort(function(a, b){ return b.costo - a.costo; });
+    r.infobrasNo.sort(function(a, b){ return (a.infobras || "").localeCompare(b.infobras || ""); });
+    r.novedades = (D.novedades || []).filter(function(n){ return n.entidad === state.entidad; });
+    return r;
+  }
+
+  function textoWhatsApp(r){
+    var e = ent(), L = [];
+    function top3(arr, fn){ arr.slice(0, 5).forEach(function(x){ L.push("  • " + fn(x)); }); if(arr.length > 5) L.push("  … y " + (arr.length - 5) + " más"); }
+    L.push("*Reporte semanal de obras – " + e.nombre + "*");
+    L.push(r.hayAnt ? "Del " + fecha(D.semanas.anterior.fecha) + " al " + fecha(D.semanas.actual.fecha) : "Corte al " + fecha(D.actualizado));
+    L.push("");
+    L.push("Presupuesto de inversiones " + D.actualizado.slice(0,4) + ": " + Math.round(e.devengado / (e.pim || 1) * 100) + "% ejecutado (" + solesM(e.devengado) + " de " + solesM(e.pim) + ")");
+    if(r.hayAnt){
+      L.push("✔ Avanzaron: " + r.avanzaron.length); top3(r.avanzaron, function(x){ return x.o.nombre.slice(0, 70) + " (+" + x.d + "%, ahora " + x.o.fisico + "%)"; });
+      L.push("▶ Reactivadas: " + r.reactivadas.length); top3(r.reactivadas, function(o){ return o.nombre.slice(0, 70); });
+      L.push("⏸ Se paralizaron: " + r.paralizadas.length); top3(r.paralizadas, function(o){ return o.nombre.slice(0, 70); });
+      L.push("⚠ En ejecución sin avance: " + r.sinAvance.length);
+    }
+    if(r.hayIb) L.push("📷 Actualizaron INFOBRAS: " + r.infobrasSi.length + " de " + (r.infobrasSi.length + r.infobrasNo.length));
+    L.push("📌 Novedades MEF de la semana: " + r.novedades.length);
+    return L.join("\n");
+  }
+
+  // ---------- vistas ----------
+  function vResumen(){
+    var e = ent(), obras = obrasDe("actual"), pctE = e.pim ? Math.round(e.devengado / e.pim * 100) : 0;
+    var cuenta = {}; obras.forEach(function(o){ cuenta[o.estado] = (cuenta[o.estado] || 0) + 1; });
+    var fin = D.actualizado.slice(0,4) + "-12-31", dias = Math.max(0, diasEntre(D.actualizado, fin));
+    var r = reporte(), alertas = [];
+    obras.forEach(function(o){
+      if(o.estado === "Paralizada") alertas.push({ c:"bad", t:"PARALIZADA", m:o.nombre, s:o.costo, p:0, cui:o.cui });
+      else if(o.estado === "En ejecución" && mesesDesde(o.infobras, D.actualizado) > 2 && o.obras_infobras) alertas.push({ c:"warn", t:"INFOBRAS SIN ACTUALIZAR", m:o.nombre + " · último avance " + fecha(o.infobras), s:o.costo, p:1, cui:o.cui });
+      else if(o.estado === "En ejecución" && o.fisico != null && o.financiero - o.fisico >= 10) alertas.push({ c:"warn", t:"GASTO > AVANCE", m:o.nombre + " · financiero " + o.financiero + "% vs físico " + o.fisico + "%", s:o.costo, p:2, cui:o.cui });
+    });
+    alertas.sort(function(a, b){ return a.p - b.p || b.s - a.s; });
+    var nPar = alertas.filter(function(a){ return a.p === 0; }).length, nIb = alertas.filter(function(a){ return a.p === 1; }).length, nGa = alertas.filter(function(a){ return a.p === 2; }).length;
+    var pills = Object.keys(ESTADO_ORDEN).filter(function(k){ return cuenta[k]; }).map(function(k){ return '<button class="pill ' + ESTADO_CLASE[k] + '" data-ir-estado="' + esc(k) + '" title="Ver estas obras">' + cuenta[k] + ' ' + k.toLowerCase() + ' →</button>'; }).join("");
+    return top("Resumen", "Corte al " + fecha(D.actualizado) + " · " + fuente()) +
+      '<section class="grid" aria-label="Indicadores">' +
+        kpi("Presupuesto de inversiones " + D.actualizado.slice(0,4) + " (PIM)", solesM(e.pim)) +
+        '<div class="card kpi"><div class="lbl">Devengado</div><div class="val">' + solesM(e.devengado) + '</div><div class="bar"><div style="width:' + Math.min(100, pctE) + '%"></div></div><div class="sub" style="margin-top:6px">' + pctE + '% ejecutado</div></div>' +
+        kpi("Por ejecutar al cierre del año", '<span style="color:var(--warn)">' + solesM(e.pim - e.devengado) + '</span>', "Quedan " + dias + " días") +
+        kpi("Inversiones por cerrar", String(e.por_cerrar || 0), (e.cerradas_anio || 0) + " cerradas este año").replace('class="card kpi"', 'class="card kpi ir" data-ir-estado="Por liquidar" role="button" tabindex="0"') +
+      '</section>' + bloqueRanking(e) +
+      '<section class="card"><h2 style="margin-bottom:10px">Cartera de ' + obras.length.toLocaleString("es-PE") + ' inversiones (todas las fases)</h2><div style="display:flex;flex-wrap:wrap;gap:8px">' + pills + '</div></section>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">' +
+        '<section class="card" style="flex:999 1 420px;min-width:0"><h2>Esta semana</h2>' +
+          (r.hayAnt ? '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">' +
+            mini(r.avanzaron.length, "avanzaron", "ok") + mini(r.reactivadas.length, "reactivadas", "ok") +
+            mini(r.paralizadas.length, "se paralizaron", "bad") + mini(r.novedades.length, "novedades MEF", "info") +
+          '</div>' : '<p class="empty">La comparación semanal estará disponible cuando SIRCI tenga una foto de hace 7 días.</p>') +
+          '<p style="margin:14px 0 0"><button class="btn" data-go="semanal">Ver reporte semanal completo</button></p></section>' +
+        '<section class="card" style="flex:1 1 320px;min-width:0"><h2>Requiere su atención</h2>' +
+          '<p class="sub" style="margin:0 0 10px">' + nPar + ' paralizadas · ' + nIb + ' sin actualizar INFOBRAS · ' + nGa + ' con gasto mayor al avance</p><div class="list">' +
+          (alertas.length ? alertas.slice(0, 8).map(function(a){ return '<button class="alerta" data-ir-cui="' + esc(a.cui) + '"><span class="pill ' + a.c + '">' + a.t + '</span><span style="display:block;margin-top:4px;font-weight:600;font-size:13px">' + esc(a.m) + '</span><span class="sub" style="display:block;font-size:12px">' + soles(a.s) + '</span></button>'; }).join("") : '<p class="empty">Sin alertas.</p>') +
+          (alertas.length > 8 ? '<button class="btn" data-go="obras">Ver todas en Obras</button>' : '') +
+        '</div></section>' +
+      '</div>' + widgetNoticias();
+  }
+
+  var PIN = '<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-2px"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+  function lugaresDe(obras){
+    var c = {};
+    obras.forEach(function(o){
+      var vistos = {};
+      (o.lugares || []).concat(o.distrito ? [o.distrito] : []).forEach(function(l){ if(!vistos[l]){ vistos[l] = 1; c[l] = (c[l] || 0) + 1; } });
+    });
+    return Object.keys(c).map(function(k){ return [k, c[k]]; }).sort(function(a, b){ return b[1] - a[1]; });
+  }
+  function vObras(){
+    var f = state.filtro.toLowerCase(), l = state.lugar || "";
+    var ant = {}; obrasDe("anterior").forEach(function(o){ ant[o.cui] = o; });
+    var todas = obrasDe("actual");
+    var delLugar = todas.filter(function(o){ return enLugar(o, l); });
+    var obras = delLugar.filter(function(o){
+      return (!f || (o.nombre + " " + o.cui + " " + (o.distrito || "")).toLowerCase().indexOf(f) >= 0) &&
+             (!state.estado || o.estado === state.estado || (state.estado === "fav" && esFav(o.cui)) ||
+              GRUPOS.some(function(g){ return state.estado === "g:" + g[0] && g[1].indexOf(o.estado) >= 0; }));
+    }).sort(function(a, b){ return (esFav(b.cui) - esFav(a.cui)) || (ESTADO_ORDEN[a.estado] - ESTADO_ORDEN[b.estado]) || (b.costo - a.costo); });
+    var total = obras.length;
+    var filas = obras.slice(0, MAX_FILAS).map(function(o){
+      var p = ant[o.cui], d = (p && p.fisico != null && o.fisico != null) ? o.fisico - p.fisico : 0;
+      var extra = o.estado === "Cerrada" && o.cierre ? ' <span class="sub" style="font-size:12px">' + fecha(o.cierre) + '</span>' : '';
+      return '<tr><td><button class="star" aria-pressed="' + esFav(o.cui) + '" aria-label="Seguir obra ' + esc(o.cui) + '" data-fav="' + esc(o.cui) + '">' + (esFav(o.cui) ? "★" : "☆") + '</button></td>' +
+        '<td style="font-weight:600;font-size:13px;max-width:420px">' + esc(o.nombre) + ((o.lugares || []).length ? '<div class="sub" style="font-weight:500;font-size:12px;margin-top:3px">' + PIN + ' ' + esc(o.lugares.join(" · ")) + '</div>' : '') + '</td><td class="sub">' + esc(o.cui) + '</td>' +
+        '<td class="num">' + soles(o.costo) + '</td><td class="num">' + pct(o.fisico) + (d > 0 ? ' <span style="color:var(--brand);font-size:12px">+' + d + '</span>' : '') + '</td>' +
+        '<td class="num">' + o.financiero + '%</td><td><span class="pill ' + (ESTADO_CLASE[o.estado] || "info") + '">' + esc(o.estado) + '</span>' + extra + '</td>' +
+        '<td class="sub">' + (o.obras_infobras ? fecha(o.infobras) : "sin registro") + '</td></tr>';
+    }).join("");
+    var grupoOpts = GRUPOS.map(function(g){ return '<option value="g:' + g[0] + '">' + g[0] + ' (grupo)</option>'; }).join("");
+    var opts = '<option value="">Todas las fases</option><option value="fav">Mis favoritas</option>' + grupoOpts + Object.keys(ESTADO_ORDEN).map(function(k){ return '<option>' + k + '</option>'; }).join("");
+    var lugs = lugaresDe(todas);
+    var sugeridos = lugs.slice(0, 12).map(function(x){ return '<button class="chip" data-lugar="' + esc(x[0]) + '" aria-pressed="' + (sinTilde(l) === sinTilde(x[0])) + '">' + esc(x[0]) + ' <span class="n">' + x[1] + '</span></button>'; }).join("");
+    var resumenLugar = "";
+    if(l){
+      var costo = delLugar.reduce(function(a, o){ return a + (o.costo || 0); }, 0);
+      resumenLugar = '<section class="card"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:baseline"><h2 style="margin:0">' + PIN + ' ' + esc(l) + '</h2><span class="sub">' + delLugar.length + ' inversiones · ' + solesM(costo) + ' en costo total</span></div>' +
+        '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:12px">' +
+        GRUPOS.map(function(g){
+          var n = delLugar.filter(function(o){ return g[1].indexOf(o.estado) >= 0; }).length;
+          var on = state.estado === "g:" + g[0];
+          return '<div class="' + g[2] + ' ir" data-grupo="' + g[0] + '" role="button" tabindex="0" aria-pressed="' + on + '" style="border-radius:12px;padding:12px;' + (on ? 'outline:3px solid var(--brand)' : '') + '"><div style="font-size:24px;font-weight:700">' + n + '</div><div style="font-size:13px;font-weight:600">' + g[0] + '</div></div>';
+        }).join("") + '</div></section>';
+    }
+    return top("Obras por lugar", "Busque por centro poblado, caserío, barrio o distrito · todas las fases: preinversión, ejecución y cerradas") +
+      '<section class="card" style="display:flex;flex-direction:column;gap:12px">' +
+        '<label for="lugar" class="sub">Lugar (centro poblado, caserío, barrio o distrito)</label>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap"><input id="lugar" class="search" list="listaLug" placeholder="Ej.: Huaripampa" value="' + esc(l) + '"><datalist id="listaLug">' + lugs.slice(0, 400).map(function(x){ return '<option value="' + esc(x[0]) + '">'; }).join("") + '</datalist>' +
+        (l ? '<button class="btn" id="limpiarLugar" type="button">Quitar lugar</button>' : '') + '</div>' +
+        '<div class="chips" role="group" aria-label="Lugares con más inversiones">' + sugeridos + '</div>' +
+      '</section>' + resumenLugar +
+      '<section class="card"><div class="tools">' +
+        '<label>Buscar <input id="q" type="search" placeholder="Nombre, CUI o distrito" value="' + esc(state.filtro) + '"></label>' +
+        '<label>Fase <select id="fe">' + opts + '</select></label>' +
+        '<span class="sub">' + (total > MAX_FILAS ? "Mostrando " + MAX_FILAS + " de " + total + ": afine con lugar, fase o buscador" : total + " inversiones") + '</span>' +
+      '</div><div class="tbl-wrap"><table><thead><tr><th><span aria-label="Favorita">☆</span></th><th>Inversión</th><th>CUI</th><th class="num">Costo</th><th class="num">Físico</th><th class="num">Financiero</th><th>Fase / estado</th><th>Últ. avance INFOBRAS</th></tr></thead><tbody>' +
+      (filas || '<tr><td colspan="8" class="empty">No hay inversiones con ese filtro.</td></tr>') + '</tbody></table></div></section>';
+  }
+  function vSemanal(){
+    var r = reporte();
+    function lista(arr, fn){
+      if(!arr.length) return '<p class="empty">Ninguna.</p>';
+      return '<ul>' + arr.slice(0, MAX_LISTA).map(fn).join("") + '</ul>' + (arr.length > MAX_LISTA ? '<p class="sub">… y ' + (arr.length - MAX_LISTA) + ' más</p>' : '');
+    }
+    function val(v){ return typeof v === "number" ? soles(v) : esc(v == null ? "" : v); }
+    var periodo = r.hayAnt ? "Del " + fecha(D.semanas.anterior.fecha) + " al " + fecha(D.semanas.actual.fecha) : "Corte al " + fecha(D.actualizado);
+    return top("Reporte semanal", periodo + " · " + esc(ent().nombre),
+        '<button class="btn" id="copiar">Copiar para WhatsApp</button><button class="btn primary" id="imprimir">Imprimir / PDF</button>') +
+      graficosAvance(ent()) + (r.hayAnt ? '' : '<section class="card"><p class="empty">Aún no hay una foto de SIRCI de hace una semana para comparar avances. Se completa sola con las actualizaciones diarias.</p></section>') +
+      '<section class="card rep-sec">' +
+        (r.hayAnt ?
+          '<h3><span class="pill ok">Avanzaron (' + r.avanzaron.length + ')</span></h3>' + lista(r.avanzaron, function(x){ return '<li><b>' + esc(x.o.nombre) + '</b>: +' + x.d + '% (ahora ' + x.o.fisico + '%)</li>'; }) +
+          '<h3><span class="pill ok">Reactivadas (' + r.reactivadas.length + ')</span></h3>' + lista(r.reactivadas, function(o){ return '<li><b>' + esc(o.nombre) + '</b> dejó de figurar como paralizada</li>'; }) +
+          '<h3><span class="pill bad">Se paralizaron (' + r.paralizadas.length + ')</span></h3>' + lista(r.paralizadas, function(o){ return '<li><b>' + esc(o.nombre) + '</b></li>'; }) +
+          '<h3><span class="pill warn">En ejecución sin avance físico (' + r.sinAvance.length + ')</span></h3>' + lista(r.sinAvance, function(o){ return '<li><b>' + esc(o.nombre) + '</b> sigue en ' + pct(o.fisico) + ' · ' + soles(o.costo) + '</li>'; }) +
+          '<h3><span class="pill info">Nuevas en cartera (' + r.nuevas.length + ')</span></h3>' + lista(r.nuevas, function(o){ return '<li><b>' + esc(o.nombre) + '</b> · ' + soles(o.costo) + '</li>'; })
+        : '') +
+        '<h3><span class="pill info">Novedades del MEF en la semana (' + r.novedades.length + ')</span></h3>' +
+          lista(r.novedades, function(n){ return '<li><b>' + esc(n.texto) + '</b> · CUI ' + esc(n.cui) + (n.nombre ? ' · ' + esc(n.nombre.slice(0, 90)) : '') + (n.antes != null || n.ahora != null ? ' <span class="sub">(' + (n.antes != null ? val(n.antes) + ' → ' : '') + val(n.ahora) + ')</span>' : '') + '</li>'; }) +
+        (r.hayIb ?
+          '<h3><span class="pill info">Actualizaron INFOBRAS (' + r.infobrasSi.length + ')</span></h3>' + lista(r.infobrasSi, function(o){ return '<li><b>' + esc(o.nombre) + '</b> · avance de ' + fecha(o.infobras) + '</li>'; }) +
+          '<h3><span class="pill warn">No actualizaron INFOBRAS (' + r.infobrasNo.length + ')</span></h3>' + lista(r.infobrasNo, function(o){ return '<li><b>' + esc(o.nombre) + '</b> · ' + (!o.obras_infobras ? "sin registro en INFOBRAS" : o.infobras ? "último avance " + fecha(o.infobras) : "sin avance registrado") + '</li>'; })
+        : '<h3><span class="pill info">INFOBRAS</span></h3><p class="empty">Desde la próxima actualización semanal del dataset de INFOBRAS se mostrará qué obras actualizaron su avance.</p>') +
+      '</section>';
+  }
+
+  // ---------- gráficos (SVG propio) ----------
+  var TIPOS = [["P","Proyectos (inversiones)"],["A","Actividades"],["T","Total"]];
+  function valH(r, t){ return t === "P" ? [r[1], r[2]] : t === "T" ? [r[3], r[4]] : [r[3] - r[1], r[4] - r[2]]; }
+  function grafico(o){
+    // o: {labels, barras, linea, linea2, fmtBarra, fmtLinea, maxLinea, nombreBarra, nombreLinea, nombreLinea2, alto}
+    var W = 640, H = o.alto || 240, ml = 54, mr = 44, mt = 18, mb = 30, n = o.labels.length;
+    var iw = W - ml - mr, ih = H - mt - mb, paso = iw / Math.max(1, n), bw = Math.min(38, paso * 0.62);
+    var maxB = Math.max.apply(null, o.barras.map(function(v){ return v || 0; }).concat([1]));
+    var maxL = o.maxLinea || Math.max.apply(null, (o.linea || []).concat(o.linea2 || []).map(function(v){ return v || 0; }).concat([1]));
+    var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="graf" role="img" aria-label="' + esc(o.titulo || "Gráfico") + '">';
+    for(var k = 0; k <= 4; k++){
+      var y = mt + ih - ih * k / 4;
+      g += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + y + '" y2="' + y + '" class="gl"/>' +
+           '<text x="' + (ml - 6) + '" y="' + (y + 4) + '" class="ax" text-anchor="end">' + esc(o.fmtBarra(maxB * k / 4, true)) + '</text>' +
+           (o.linea ? '<text x="' + (W - mr + 6) + '" y="' + (y + 4) + '" class="ax">' + esc(o.fmtLinea(maxL * k / 4)) + '</text>' : '');
+    }
+    o.barras.forEach(function(v, i){
+      var x = ml + paso * i + (paso - bw) / 2, h = (v || 0) / maxB * ih;
+      g += '<rect class="gb" style="animation-delay:' + (i * 40) + 'ms" x="' + x.toFixed(1) + '" y="' + (mt + ih - h).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + Math.max(0, h).toFixed(1) + '" rx="3"><title>' + esc(o.labels[i] + " · " + o.nombreBarra + ": " + o.fmtBarra(v || 0) + (o.linea && o.linea[i] != null ? " · " + o.nombreLinea + ": " + o.fmtLinea(o.linea[i]) : "")) + '</title></rect>';
+      g += '<text x="' + (ml + paso * i + paso / 2).toFixed(1) + '" y="' + (H - 10) + '" class="ax" text-anchor="middle">' + esc(o.labels[i]) + '</text>';
+    });
+    function trazo(vals, cls){
+      var pts = []; vals.forEach(function(v, i){ if(v != null) pts.push([ml + paso * i + paso / 2, mt + ih - v / maxL * ih, v, i]); });
+      if(!pts.length) return "";
+      var d = pts.map(function(p, i){ return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+      return '<path d="' + d + '" class="' + cls + '"/>' + pts.map(function(p){ return '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3.5" class="' + cls + '-p"><title>' + esc(o.labels[p[3]] + " · " + (cls === "gl2" ? o.nombreLinea2 : o.nombreLinea) + ": " + o.fmtLinea(p[2])) + '</title></circle>'; }).join("");
+    }
+    if(o.linea2) g += trazo(o.linea2, "gl2");
+    if(o.linea) g += trazo(o.linea, "gl1");
+    g += '</svg>';
+    var ley = '<div class="leyenda"><span><i class="lb"></i>' + esc(o.nombreBarra) + '</span>' + (o.linea ? '<span><i class="ll"></i>' + esc(o.nombreLinea) + '</span>' : '') + (o.linea2 ? '<span><i class="ll2"></i>' + esc(o.nombreLinea2) + '</span>' : '') + '</div>';
+    return g + ley;
+  }
+  function millones(v, corto){ return v >= 1e6 ? "S/" + (v / 1e6).toLocaleString("es-PE", {maximumFractionDigits: corto ? 0 : 1}) + " M" : v >= 1e3 ? "S/" + Math.round(v / 1e3) + " mil" : "S/" + Math.round(v); }
+
+  // ---------- ranking y presupuesto por año ----------
+  function chipsTipo(){
+    return '<div class="chips" role="group" aria-label="Tipo de gasto">' + TIPOS.map(function(t){ return '<button class="chip" data-tipo="' + t[0] + '" aria-pressed="' + (state.rkTipo === t[0]) + '">' + t[1] + '</button>'; }).join("") + '</div>';
+  }
+  var RKT = D.ranking || null;
+  function rankDesde(e, anio, t){
+    // devuelve {lista:[{i,nom,prov,dep,p,id}], pos:{prov:[p,n],dep:[p,n],nac:[p,n]}, yo:indice}
+    if(!RKT || !e.ub) return null;
+    var arr = ((RKT.p || {})[t] || {})[anio]; if(!arr) return null;
+    var yo = -1, lista = [];
+    RKT.n.forEach(function(x, i){ if(arr[i] >= 0) lista.push({i:i, nom:x[0], prov:x[1], dep:x[2], ub:x[3], id:x[4], p:arr[i] / 10}); if(x[3] === e.ub) yo = i; });
+    lista.sort(function(a, b){ return b.p - a.p || a.nom.localeCompare(b.nom); });
+    function grupo(f){ var g = lista.filter(f), p = 0; g.forEach(function(x, k){ if(x.i === yo) p = k + 1; }); return {g:g, pos:p ? [p, g.length] : null}; }
+    return {
+      prov: grupo(function(x){ return x.ub.slice(0, 4) === e.ub.slice(0, 4); }),
+      dep: grupo(function(x){ return x.ub.slice(0, 2) === e.ub.slice(0, 2); }),
+      nac: grupo(function(){ return true; }), yo: yo };
+  }
+  function listaRanking(g, yo){
+    var filas = g.g, idx = -1;
+    filas.forEach(function(x, k){ if(x.i === yo) idx = k; });
+    var mostrar = [];
+    if(filas.length <= 25 || state.rkTodos){ mostrar = filas.map(function(x, k){ return [k, x]; }); }
+    else{
+      for(var k = 0; k < 10; k++) mostrar.push([k, filas[k]]);
+      var a = Math.max(10, idx - 3), b = Math.min(filas.length - 1, idx + 3);
+      if(idx >= 0){ if(a > 10) mostrar.push(null); for(k = a; k <= b; k++) mostrar.push([k, filas[k]]); }
+      if((idx < 0 ? 9 : b) < filas.length - 1) mostrar.push(null);
+    }
+    var htm = mostrar.map(function(m){
+      if(!m) return '<div class="vec-sep">⋯</div>';
+      var v = m[1], mia = v.i === yo, sub = state.rkAmbito === "nac" ? " · " + v.dep : state.rkAmbito === "dep" ? " · " + v.prov : "";
+      return '<button class="vec' + (mia ? ' mia' : '') + '" ' + (mia || !v.id ? 'disabled' : 'data-verent="' + esc(v.id) + '"') + ' title="' + esc(v.nom + sub) + '">' +
+        '<span class="vp">' + (m[0] + 1) + '</span><span class="vn">' + esc(v.nom) + '<small>' + esc(sub) + '</small></span>' +
+        '<span class="vb"><span style="width:' + Math.min(100, v.p).toFixed(1) + '%"></span></span><span class="vv">' + v.p.toFixed(1) + '%</span></button>';
+    }).join("");
+    if(filas.length > 25) htm += '<button class="btn" data-rktodos style="margin-top:8px">' + (state.rkTodos ? 'Ver resumen' : 'Ver los ' + filas.length) + '</button>';
+    return '<div class="vecinas">' + htm + '</div>';
+  }
+  function listaProvincia(e, anio, t){
+    // respaldo si los datos aún no traen el ranking nacional: municipalidades de la provincia
+    var vec = entidades.filter(function(x){ return x.region === e.region && x.provincia === e.provincia && /^Municipalidad/i.test(x.nombre); })
+      .map(function(x){ var f = (x.hist || []).filter(function(z){ return String(z[0]) === anio; })[0]; var v = f ? valH(f, t) : [0, 0]; return {i: x.id, id: x.id, nom: x.nombre.replace(/^Municipalidad (Distrital|Provincial) de\s*/i, "") + (/Provincial/i.test(x.nombre) ? " (prov.)" : ""), p: v[0] > 0 ? Math.round(v[1] / v[0] * 1000) / 10 : null}; })
+      .filter(function(x){ return x.p != null; }).sort(function(a, b){ return b.p - a.p; });
+    if(vec.length < 2) return "";
+    var amb = state.rkAmbito; state.rkAmbito = "prov";
+    var h = '<h3 style="font-size:14px;margin:16px 0 8px">Municipalidades de la provincia de ' + esc(e.provincia) + ' · ' + anio + '</h3>' + listaRanking({g: vec}, e.id);
+    state.rkAmbito = amb; return h;
+  }
+  function bloqueRanking(e){
+    var h = e.hist || [], t = state.rkTipo, gr = e.grupo_rk === "gobiernos regionales";
+    if(!h.length && !(e.rk && e.rk.P)) return "";
+    var anios = h.map(function(x){ return String(x[0]); });
+    if(gr) anios = [D.actualizado.slice(0, 4)];
+    var anio = anios.indexOf(state.rkAnio) >= 0 ? state.rkAnio : anios[anios.length - 1];
+    var r = ((e.rk || {})[gr ? "P" : t] || {})[anio], RT = gr ? null : rankDesde(e, anio, t);
+    if(RT) r = [RT.prov.pos, RT.dep.pos, RT.nac.pos];
+    var fila = h.filter(function(x){ return String(x[0]) === anio; })[0];
+    var vv = fila ? valH(fila, t) : [e.pim, e.devengado];
+    var pctE = vv[0] ? Math.round(vv[1] / vv[0] * 1000) / 10 : 0;
+    function badge(tt, v, amb){ return v ? '<button class="rk' + (state.rkAmbito === amb ? ' sel' : '') + '"' + (amb ? ' data-rkamb="' + amb + '"' : '') + '><span class="rk-n">' + v[0] + '<span>/' + v[1] + '</span></span><span class="rk-t">' + tt + '</span></button>' : ''; }
+    var badges = r ? (gr ? badge("entre gobiernos regionales", r[2]) : badge("en la provincia", r[0], "prov") + badge("en " + esc(e.region), r[1], "dep") + badge("en el Perú", r[2], "nac")) : '<p class="empty">Sin datos para ese año.</p>';
+    var AMB = {prov: "Provincia de " + e.provincia, dep: "Departamento de " + e.region, nac: "Todo el Perú"};
+    var listaVec = RT ? '<div class="chips" role="group" aria-label="Ámbito del ranking" style="margin-top:14px">' + ["prov","dep","nac"].map(function(k){ return '<button class="chip" data-rkamb="' + k + '" aria-pressed="' + (state.rkAmbito === k) + '">' + {prov:"Provincial", dep:"Departamental", nac:"Nacional"}[k] + '</button>'; }).join("") + '</div>' +
+      '<h3 style="font-size:14px;margin:12px 0 8px">' + esc(AMB[state.rkAmbito]) + ' · ' + anio + '</h3>' + listaRanking(RT[state.rkAmbito], RT.yo) : (gr ? '' : listaProvincia(e, anio, t));
+    var chipsAnio = gr ? '' : '<label class="sel-anio">Año <select id="rkAnio">' + anios.slice().reverse().map(function(a){ return '<option' + (a === anio ? ' selected' : '') + '>' + a + '</option>'; }).join("") + '</select></label>';
+    var nombreT = TIPOS.filter(function(x){ return x[0] === t; })[0][1].toLowerCase();
+    var graf = h.length ? grafico({titulo: "PIM y devengado por año", labels: h.map(function(x){ return String(x[0]); }),
+        barras: h.map(function(x){ return valH(x, t)[0]; }), linea: h.map(function(x){ var v = valH(x, t); return v[0] ? Math.round(v[1] / v[0] * 1000) / 10 : null; }),
+        linea2: null, fmtBarra: millones, fmtLinea: function(v){ return Math.round(v) + "%"; }, maxLinea: 100, nombreBarra: "PIM", nombreLinea: "% de ejecución"}) : '';
+    var tabla = h.length ? '<div class="tbl-wrap" style="margin-top:12px"><table style="min-width:440px"><thead><tr><th>Año</th><th class="num">PIM</th><th class="num">Devengado</th><th class="num">% ejec.</th><th class="num">Puesto en ' + esc(e.region) + '</th></tr></thead><tbody>' +
+        h.slice().reverse().map(function(x){ var v = valH(x, t), rr = ((e.rk || {})[t] || {})[String(x[0])], rd = !gr && rankDesde(e, String(x[0]), t); if(rd) rr = [rd.prov.pos, rd.dep.pos, rd.nac.pos]; return '<tr' + (String(x[0]) === anio ? ' class="fila-sel"' : '') + '><td><b>' + x[0] + '</b></td><td class="num">' + solesM(v[0]) + '</td><td class="num">' + solesM(v[1]) + '</td><td class="num">' + (v[0] ? (v[1] / v[0] * 100).toFixed(1) : 0) + '%</td><td class="num">' + (rr && rr[1] ? rr[1][0] + ' / ' + rr[1][1] : '—') + '</td></tr>'; }).join("") +
+        '</tbody></table></div>' : '';
+    return '<section class="card" style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center"><h2 style="margin:0">Presupuesto y ranking de ejecución</h2><div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">' + chipsAnio + (gr ? '' : chipsTipo()) + '</div></div></section>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:stretch">' +
+      '<section class="card" style="flex:1 1 360px;min-width:0"><h2>Ranking ' + anio + (gr ? '' : ' · ' + esc(nombreT)) + '</h2>' +
+        '<p class="sub" style="margin:-6px 0 12px">Puesto según % del PIM devengado (' + pctE + '%: ' + solesM(vv[1]) + ' de ' + solesM(vv[0]) + '). 1 = el que más ejecutó.</p>' +
+        '<div class="rks">' + badges + '</div>' + listaVec + '</section>' +
+      (h.length ? '<section class="card" style="flex:1.4 1 420px;min-width:0"><h2>PIM y ejecución por año · ' + esc(nombreT) + '</h2>' +
+        '<p class="sub" style="margin:-6px 0 8px">Barras = PIM · línea = % devengado. Pase el mouse por las barras o puntos para ver el detalle.</p>' + graf + tabla + '</section>' : '') + '</div>';
+  }
+
+  // ---------- gráficos del reporte semanal ----------
+  function semanaDe(f){ var d = new Date(f + "T12:00:00"), dia = (d.getDay() + 6) % 7; d.setDate(d.getDate() - dia); return d.toISOString().slice(0, 10); }
+  function graficosAvance(e){
+    var out = "";
+    // semanal
+    var s = e.serie || [];
+    if(e.foco){
+      var porSem = {}; s.forEach(function(p){ porSem[semanaDe(p[0])] = p; });
+      var claves = Object.keys(porSem).sort(), modo = "semana";
+      var pts = claves.map(function(k){ return [k, porSem[k]]; });
+      if(pts.length < 2 && s.length >= 2){ modo = "día"; pts = s.map(function(p){ return [p[0], p]; }); }
+      pts = pts.slice(-13);
+      if(pts.length >= 3){
+        var labels = [], barras = [], linea = [], par = [];
+        for(var i = 1; i < pts.length; i++){
+          labels.push(fecha(pts[i][0]).slice(0, 5)); barras.push(Math.max(0, pts[i][1][1] - pts[i - 1][1][1]));
+          linea.push(pts[i][1][2]); par.push(pts[i][1][3]);
+        }
+        out += '<section class="card"><h2>Avance por ' + modo + '</h2><p class="sub" style="margin:-6px 0 8px">Barras = devengado de cada ' + modo + ' (toda la cartera) · línea = avance físico promedio de las obras en ejecución (ponderado por costo). Paralizadas hoy: <b>' + par[par.length - 1] + '</b>.</p>' +
+          grafico({titulo: "Avance por " + modo, labels: labels, barras: barras, linea: linea, fmtBarra: millones, fmtLinea: function(v){ return (Math.round(v * 10) / 10) + "%"; }, maxLinea: 100, nombreBarra: "Devengado", nombreLinea: "Avance físico"}) + '</section>';
+      } else {
+        out += '<section class="card"><h2>Avance semanal</h2><p class="empty">Se arma con cada actualización diaria; con una semana más de datos aparecerá el gráfico.</p></section>';
+      }
+    }
+    // mensual
+    var anio = D.actualizado.slice(0, 4), t = state.rkTipo, M = e.mes || {};
+    function mensual(y){
+      var m = M[y]; if(!m) return null;
+      if(t === "A"){ if(!m.T) return null; return m.T.map(function(c, i){ return c[1] - ((m.P || [])[i] || [0, 0])[1]; }); }
+      return m[t] ? m[t].map(function(c){ return c[1]; }) : null;
+    }
+    function pimDe(y){ var f = (e.hist || []).filter(function(x){ return String(x[0]) === y; })[0]; return f ? valH(f, t)[0] : 0; }
+    var act = mensual(anio), prev = mensual(String(+anio - 1));
+    if(act){
+      var mesHoy = +D.actualizado.slice(5, 7), nombres = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Set","Oct","Nov","Dic"];
+      var pA = pimDe(anio), pP = pimDe(String(+anio - 1)), acA = 0, acP = 0;
+      var linA = act.map(function(v, i){ acA += v; return i < mesHoy && pA ? Math.round(acA / pA * 1000) / 10 : null; });
+      var linP = prev ? prev.map(function(v){ acP += v; return pP ? Math.round(acP / pP * 1000) / 10 : null; }) : null;
+      out += '<section class="card"><div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center"><h2 style="margin:0">Ejecución mensual ' + anio + '</h2>' + chipsTipo() + '</div>' +
+        '<p class="sub" style="margin:6px 0 8px">Barras = devengado de cada mes · línea = % acumulado del PIM ' + anio + (linP ? ' · línea punteada = ' + (+anio - 1) + ' (para comparar)' : '') + '.</p>' +
+        grafico({titulo: "Ejecución mensual", labels: nombres, barras: act.map(function(v, i){ return i < mesHoy ? v : 0; }), linea: linA, linea2: linP, fmtBarra: millones, fmtLinea: function(v){ return Math.round(v) + "%"; }, maxLinea: 100, nombreBarra: "Devengado del mes", nombreLinea: "% acumulado " + anio, nombreLinea2: "% acumulado " + (+anio - 1)}) + '</section>';
+    }
+    return out ? '<div class="graficos">' + out + '</div>' : '';
+  }
+
+  // ---------- presupuesto participativo ----------
+  function vPP(){
+    var e = ent(), P = D.pp || {registros: [], cercanas: {}};
+    var regs = (P.registros || []).filter(function(x){ return x.entidad === state.entidad; });
+    var anios = {}; regs.forEach(function(x){ anios[x.anio] = 1; });
+    var anioAct = D.actualizado.slice(0, 4);
+    anios[anioAct] = 1; anios[String(+anioAct + 1)] = 1;
+    var lista = Object.keys(anios).sort().reverse();
+    var conReg = Object.keys(anios).filter(function(a){ return regs.some(function(x){ return x.anio === a; }); }).sort().reverse();
+    if(!state.ppAnio || lista.indexOf(state.ppAnio) < 0) state.ppAnio = conReg[0] || anioAct;
+    var del = regs.filter(function(x){ return x.anio === state.ppAnio; }).sort(function(a, b){ return (ESTADO_ORDEN[a.estado] - ESTADO_ORDEN[b.estado]) || b.monto - a.monto; });
+    var acordado = del.reduce(function(a, x){ return a + (x.monto || 0); }, 0);
+    var conEjec = del.filter(function(x){ return x.devengado > 0; }).length;
+    var termin = del.filter(function(x){ return ["Culminada","Por liquidar","Cerrada"].indexOf(x.estado) >= 0; }).length;
+    var chipsAnio = lista.map(function(a){ return '<button class="chip" data-ppanio="' + a + '" aria-pressed="' + (a === state.ppAnio) + '">PP ' + a + '</button>'; }).join("");
+    var cuerpo;
+    if(!del.length){
+      cuerpo = '<section class="card"><h2>Aún no hay proyectos registrados para el PP ' + esc(state.ppAnio) + '</h2><p class="empty" style="margin:0 0 10px">Copie los proyectos priorizados del <b>Acta de Acuerdos y Compromisos</b> en el archivo <b>presupuesto_participativo.txt</b> (año ; CUI ; monto ; nota) y ejecute ACTUALIZAR OBRACLARA.bat. Con el CUI, el portal trae solo el avance, el gasto y el estado de cada proyecto desde los datos del MEF.</p>' +
+        '<p class="sub" style="margin:0">El aplicativo público del MEF para el presupuesto participativo solo muestra procesos hasta 2016, por eso los proyectos recientes se registran aquí desde el acta.</p></section>';
+    } else {
+      var filas = del.map(function(x){
+        return '<tr><td style="font-weight:600;font-size:13px;max-width:420px">' + esc(x.nombre) + ((x.lugares || []).length ? '<div class="sub" style="font-weight:500;font-size:12px;margin-top:3px">' + PIN + ' ' + esc(x.lugares.join(" · ")) + '</div>' : '') + (x.nota ? '<div class="sub" style="font-size:12px">' + esc(x.nota) + '</div>' : '') + '</td>' +
+          '<td class="sub">' + esc(x.cui) + '</td><td class="num">' + (x.monto ? soles(x.monto) : "—") + '</td><td class="num">' + soles(x.costo) + '</td>' +
+          '<td class="num">' + pct(x.fisico) + '</td><td class="num">' + x.financiero + '%</td><td class="num">' + soles(x.dev_anio) + '</td>' +
+          '<td><span class="pill ' + (ESTADO_CLASE[x.estado] || "info") + '">' + esc(x.estado) + '</span></td></tr>';
+      }).join("");
+      cuerpo = '<section class="grid" aria-label="Indicadores del presupuesto participativo">' +
+          kpi("Proyectos priorizados", String(del.length), "PP " + state.ppAnio) +
+          kpi("Monto acordado", solesM(acordado), "según acta") +
+          kpi("Con gasto ejecutado", String(conEjec), Math.round(conEjec / del.length * 100) + "% de los priorizados") +
+          kpi("Terminados o cerrados", String(termin), "culminados, por liquidar o cerrados") +
+        '</section>' +
+        '<section class="card"><div class="tbl-wrap"><table><thead><tr><th>Proyecto priorizado</th><th>CUI</th><th class="num">Monto PP</th><th class="num">Costo actual</th><th class="num">Físico</th><th class="num">Financiero</th><th class="num">Gasto ' + D.actualizado.slice(0,4) + '</th><th>Estado</th></tr></thead><tbody>' + filas + '</tbody></table></div></section>';
+    }
+    // municipalidades cercanas
+    var cerc = (P.cercanas || {})[state.entidad];
+    if(!cerc){
+      cerc = entidades.filter(function(x){ return x.id !== e.id && x.region === e.region && x.provincia === e.provincia && /^Municipalidad/i.test(x.nombre); })
+                      .map(function(x){ return {id: x.id, nombre: x.nombre, lugar: x.nombre.replace(/^Municipalidad (Distrital|Provincial) de\s*/i, ""), noticias: []}; });
+    }
+    var anioBusca = state.ppAnio;
+    var tarjetas = cerc.map(function(c){
+      var reg = (P.registros || []).filter(function(x){ return x.entidad === c.id; });
+      var anReg = {}; reg.forEach(function(x){ anReg[x.anio] = (anReg[x.anio] || 0) + 1; });
+      var estadoTxt, cls;
+      if(reg.length){ estadoTxt = "Proyectos registrados: " + Object.keys(anReg).sort().reverse().map(function(a){ return "PP " + a + " (" + anReg[a] + ")"; }).join(", "); cls = "ok"; }
+      else if((c.noticias || []).length){ estadoTxt = c.noticias.length + " noticia(s) sobre su presupuesto participativo"; cls = "info"; }
+      else { estadoTxt = "Sin información pública encontrada"; cls = "gris"; }
+      var q = encodeURIComponent('"presupuesto participativo" ' + anioBusca + ' "' + c.lugar + '"');
+      return '<article class="card" style="display:flex;flex-direction:column;gap:8px">' +
+        '<div style="font-weight:700">' + esc(c.nombre) + '</div><span class="pill ' + cls + '" style="align-self:flex-start;white-space:normal">' + esc(estadoTxt) + '</span>' +
+        (c.noticias || []).slice(0, 2).map(function(n){ return '<a href="' + esc(n.url) + '" target="_blank" rel="noopener" style="font-size:13px">' + esc(n.titulo) + '</a><span class="sub" style="font-size:12px">' + esc(n.fuente) + ' · ' + rel(n.fecha) + '</span>'; }).join("") +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto">' +
+          '<a class="btn" style="display:inline-flex;align-items:center;text-decoration:none;font-size:13px" href="https://www.google.com/search?q=' + q + '" target="_blank" rel="noopener">Buscar su PP ' + anioBusca + '</a>' +
+          '<button class="btn" style="font-size:13px" data-verent="' + esc(c.id) + '" type="button">Ver su cartera</button>' +
+        '</div></article>';
+    }).join("");
+    return top("Presupuesto participativo", esc(e.nombre) + " · proyectos priorizados con la población y su avance real", del.length ? '<button class="btn" id="copiarPP">Copiar para WhatsApp</button><button class="btn primary" id="imprimir">Imprimir / PDF</button>' : '') +
+      ('<div class="chips no-print" role="group" aria-label="Año del presupuesto participativo">' + chipsAnio + '</div>') + cuerpo +
+      '<section class="no-print"><h2 style="margin:6px 0 12px">¿Las municipalidades <span class="verde">cercanas</span> ya programaron su PP?</h2>' +
+      '<p class="sub" style="margin:0 0 12px">Se revisan noticias del último año y los proyectos que usted registre de sus actas. «Sin información» no significa que no lo hayan hecho: use «Buscar su PP» para confirmar en su portal.</p>' +
+      (tarjetas ? '<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">' + tarjetas + '</div>' : '<p class="empty">No hay municipalidades cercanas cargadas.</p>') + '</section>';
+  }
+  function textoPP(){
+    var e = ent(), del = ((D.pp || {}).registros || []).filter(function(x){ return x.entidad === state.entidad && x.anio === state.ppAnio; });
+    var L = ["*Presupuesto participativo " + state.ppAnio + " – " + e.nombre + "*", "Corte al " + fecha(D.actualizado), ""];
+    del.forEach(function(x, i){ L.push((i + 1) + ". " + x.nombre.slice(0, 90) + " (CUI " + x.cui + ")"); L.push("   " + x.estado + " · físico " + pct(x.fisico) + " · financiero " + x.financiero + "%"); });
+    return L.join("\n");
+  }
+
+  // ---------- noticias ----------
+  var NIVELES = [["todo","Todo"],["municipalidad","Mi entidad"],["provincia","Provincia"],["region","Región"],["nacional","Nacional"]];
+  var TEMAS = ["Obras e inversión","Gestión pública","Control y Contraloría","Emergencias","Otros"];
+  var TEMA_CLASE = {"Obras e inversión":"ok","Gestión pública":"info","Control y Contraloría":"bad","Emergencias":"warn","Otros":"info"};
+  var COLORES = ["#0B6E5B","#1F4E99","#8A5300","#A12A2A","#5B3E96","#0E6E8C","#7A4B1F","#2F5D2F"];
+  function temasDe(n){ return (n.temas || []).map(function(t){ return t === "Gestión municipal" ? "Gestión pública" : t; }); }
+  function nivelDe(n){
+    if(n.nacional) return "nacional";
+    var e = ent(), ents = n.ents || {};
+    if(ents[state.entidad]) return ents[state.entidad];
+    if(e.foco) return null;
+    // entidad de consulta: se muestran las noticias de su región buscadas para otras entidades
+    for(var k in ents){ var o = entPorId[k]; if(o && o.region === e.region && ents[k] === "region") return "region"; }
+    return null;
+  }
+  function noticiasEnt(){ return (D.noticias || []).filter(function(n){ return nivelDe(n); }); }
+  function rel(iso){
+    var d = (Date.now() - new Date(iso)) / 60000;
+    if(isNaN(d)) return "";
+    if(d < 60) return "hace " + Math.max(1, Math.round(d)) + " min";
+    if(d < 1440) return "hace " + Math.round(d / 60) + " h";
+    if(d < 2880) return "ayer";
+    if(d < 43200) return "hace " + Math.round(d / 1440) + " días";
+    return fecha(iso.slice(0, 10));
+  }
+  function grupo(iso){
+    var hoy = new Date(); hoy.setHours(0,0,0,0); var t = new Date(iso);
+    if(t >= hoy) return "Hoy";
+    if(t >= new Date(hoy - 86400000)) return "Ayer";
+    if(t >= new Date(hoy - 6 * 86400000)) return "Esta semana";
+    return "Anteriores";
+  }
+  function color(s){ var h = 0; for(var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return COLORES[h % COLORES.length]; }
+  function relevancia(n){
+    var nv = {municipalidad:0, provincia:1, region:2, nacional:3}[nivelDe(n)];
+    var tm = temasDe(n).indexOf("Obras e inversión") >= 0 ? 0 : temasDe(n).indexOf("Control y Contraloría") >= 0 || temasDe(n).indexOf("Gestión pública") >= 0 ? 1 : 2;
+    var lugar = ent().nombre.replace(/^Municipalidad (Distrital|Provincial) de\s*|^Gobierno Regional( de)?\s*/i, "").toLowerCase();
+    var menciona = lugar && n.titulo.toLowerCase().indexOf(lugar) >= 0 ? -20 : 0;
+    return menciona + nv * 3 + tm;
+  }
+  function linkGoogle(){
+    var e = ent();
+    var lugar = e.tipo === "Gobierno regional" ? '"Gobierno Regional" ' + e.region : '"' + e.nombre.replace(/^Municipalidad (Distrital|Provincial) de\s*/i, "") + '" ' + (e.provincia || e.region);
+    return "https://news.google.com/search?q=" + encodeURIComponent(lugar) + "&hl=es-419&gl=PE&ceid=PE:es-419";
+  }
+  var ILUS = {"Obras e inversión":["ilus-obras",'<path d="M2 20h20"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/>'],
+              "Control y Contraloría":["ilus-control",'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>'],
+              "Gestión pública":["ilus-gestion",'<path d="M3 21h18"/><path d="M5 21V10M19 21V10M9 21V10M15 21V10"/><path d="M2 10l10-6 10 6"/>'],
+              "Emergencias":["ilus-emerg",'<path d="M12 3L2 20h20z"/><path d="M12 10v4M12 17h.01"/>'],
+              "Otros":["ilus-otros",'<path d="M4 4h13v16H6a2 2 0 0 1-2-2z"/><path d="M17 8h3v10a2 2 0 0 1-2 2"/><path d="M8 8h5M8 12h5"/>']};
+  function ilus(n){ return ILUS[temasDe(n)[0]] || ILUS["Otros"]; }
+  function icono(paths, t){ return '<svg aria-hidden="true" width="' + t + '" height="' + t + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + paths + '</svg>'; }
+  function miniatura(n){
+    var i = ilus(n);
+    return '<div class="thumb ' + i[0] + '">' + icono(i[1], 34) +
+      (n.img ? '<img src="' + esc(n.img) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '') + '</div>';
+  }
+  function itemNoticia(n, visto){
+    var nivel = nivelDe(n), fuente = n.fuente || "Fuente";
+    var esNuevo = visto && n.fecha > visto;
+    var tags = temasDe(n).map(function(t){ return '<span class="pill ' + TEMA_CLASE[t] + '">' + esc(t) + '</span>'; }).join("");
+    var nivTxt = { municipalidad:"Mi entidad", provincia:"Provincia", region:"Región", nacional:"Nacional" }[nivel];
+    return '<article class="news">' + miniatura(n) + '<div style="min-width:0">' +
+      '<a class="t" href="' + esc(n.url) + '" target="_blank" rel="noopener">' + esc(n.titulo) + '</a>' +
+      '<div class="meta">' + (esNuevo ? '<span class="nuevo">NUEVO</span>' : '') + '<b>' + esc(fuente) + '</b><span>· ' + rel(n.fecha) + '</span><span>· ' + nivTxt + '</span>' + tags + '</div></div></article>';
+  }
+  function vNoticias(){
+    var e = ent(), todas = noticiasEnt(), q = (state.nQ || "").toLowerCase();
+    var visto = state.nVisto;
+    var cuentaNiv = {todo: todas.length}; todas.forEach(function(n){ var v = nivelDe(n); cuentaNiv[v] = (cuentaNiv[v] || 0) + 1; });
+    var porNivel = todas.filter(function(n){ return !state.nNivel || state.nNivel === "todo" || nivelDe(n) === state.nNivel; });
+    var cuentaTema = {}; porNivel.forEach(function(n){ temasDe(n).forEach(function(t){ cuentaTema[t] = (cuentaTema[t] || 0) + 1; }); });
+    var lista = porNivel.filter(function(n){
+      return (!state.nTema || temasDe(n).indexOf(state.nTema) >= 0) && (!q || (n.titulo + " " + n.fuente).toLowerCase().indexOf(q) >= 0);
+    });
+    var dest = todas.filter(function(n){ return nivelDe(n) === "municipalidad" && temasDe(n).indexOf("Emergencias") < 0; })
+                    .sort(function(a, b){ return relevancia(a) - relevancia(b) || b.fecha.localeCompare(a.fecha); })[0];
+    var nuevos = visto ? todas.filter(function(n){ return n.fecha > visto; }).length : 0;
+    var chipsNiv = NIVELES.map(function(x){ var on = (state.nNivel || "todo") === x[0]; return '<button class="chip" data-nivel="' + x[0] + '" aria-pressed="' + on + '">' + x[1] + ' <span class="n">' + (cuentaNiv[x[0]] || 0) + '</span></button>'; }).join("");
+    var chipsTema = '<button class="chip" data-tema="" aria-pressed="' + !state.nTema + '">Todos los temas</button>' + TEMAS.filter(function(t){ return cuentaTema[t]; }).map(function(t){ return '<button class="chip" data-tema="' + esc(t) + '" aria-pressed="' + (state.nTema === t) + '">' + esc(t) + ' <span class="n">' + cuentaTema[t] + '</span></button>'; }).join("");
+    var grupos = {}, orden = ["Hoy","Ayer","Esta semana","Anteriores"];
+    lista.forEach(function(n){ var g = grupo(n.fecha); (grupos[g] = grupos[g] || []).push(n); });
+    var cuerpo = orden.filter(function(g){ return grupos[g]; }).map(function(g){ return '<div class="dia">' + g + ' · ' + grupos[g].length + '</div>' + grupos[g].map(function(n){ return itemNoticia(n, visto); }).join(""); }).join("");
+    return top("Noticias", (todas.length ? todas.length + " noticias de los últimos 30 días" : "Sin noticias cargadas") + (nuevos ? ' · <b style="color:#E8590C">' + nuevos + ' nuevas desde su última visita</b>' : "") + (D.generado ? " · búsqueda: " + esc(D.generado) : ""),
+        '<a class="btn primary" style="display:inline-flex;align-items:center;text-decoration:none" href="' + linkGoogle() + '" target="_blank" rel="noopener">Buscar ahora en Google Noticias</a>') +
+      (dest ? '<section class="destacada ' + (dest.img ? '' : ilus(dest)[0]) + '"' + (dest.img ? ' style="background-image:url(&quot;' + esc(dest.img) + '&quot;)"' : '') + '>' + (dest.img ? '' : '<span class="ico">' + icono(ilus(dest)[1], 120) + '</span>') + '<span class="pill" style="align-self:flex-start;background:#F5C46B;color:#3D2A00">DESTACADA · ' + esc(e.nombre) + '</span><a href="' + esc(dest.url) + '" target="_blank" rel="noopener">' + esc(dest.titulo) + '</a><span class="meta">' + esc(dest.fuente) + ' · ' + rel(dest.fecha) + ' · ' + esc(temasDe(dest).join(", ")) + '</span></section>' : '') +
+      '<section class="card" style="display:flex;flex-direction:column;gap:12px">' +
+        '<label for="nq" class="sub">Buscar en las noticias</label><input id="nq" class="search" type="search" placeholder="Ej.: agua, Contraloría, alcalde…" value="' + esc(state.nQ || "") + '">' +
+        '<div class="chips" role="group" aria-label="Alcance">' + chipsNiv + '</div>' +
+        '<div class="chips" role="group" aria-label="Tema">' + chipsTema + '</div>' +
+      '</section>' +
+      '<section class="card">' + (cuerpo || '<p class="empty">No hay noticias con esos filtros. Pruebe «Todo» o use «Buscar ahora en Google Noticias».</p>') + '</section>';
+  }
+  function widgetNoticias(){
+    var ns = noticiasEnt().filter(function(n){ return nivelDe(n) === "municipalidad" || nivelDe(n) === "provincia"; }).slice(0, 4);
+    if(!ns.length) return "";
+    return '<section class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">Últimas noticias de su zona</h2><button class="btn" data-go="noticias">Ver todas</button></div>' +
+      ns.map(function(n){ return itemNoticia(n, state.nVisto); }).join("") + '</section>';
+  }
+
+  function top(t, sub, botones){
+    var w = t.split(" "), ult = w.pop();
+    return '<header class="top"><div><h1>' + (w.length ? esc(w.join(" ")) + ' ' : '') + '<span class="verde">' + esc(ult) + '</span></h1><div class="sub">' + sub + '</div></div>' +
+      (botones ? '<div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap">' + botones + '</div>' : '') + '</header>';
+  }
+  function kpi(l, v, s){ return '<div class="card kpi"><div class="lbl">' + l + '</div><div class="val">' + v + '</div>' + (s ? '<div class="sub" style="margin-top:6px">' + s + '</div>' : '') + '</div>'; }
+  function mini(n, l, c){ return '<div class="' + c + ' ir" data-go="semanal" role="button" tabindex="0" style="border-radius:12px;padding:12px"><div style="font-size:24px;font-weight:700">' + n + '</div><div style="font-size:13px;font-weight:600">' + l + '</div></div>'; }
+
+  // ---------- acceso ----------
+  function propia(){ return state.user && state.user.entidad ? state.user.entidad : null; }
+  function entrar(u){
+    state.user = u;
+    var pref = store("oc_entidad");
+    state.entidad = (u && u.entidad && entPorId[u.entidad]) ? u.entidad
+                  : (pref && entPorId[pref]) ? pref
+                  : (entidades.filter(function(e){ return e.foco; })[0] || entidades[0]).id;
+    document.getElementById("login").hidden = true;
+    document.getElementById("app").hidden = false;
+    document.getElementById("quien").innerHTML = u ? '<b>' + esc(u.nombre) + '</b>' + (u.cargo ? ' · ' + esc(u.cargo) : '') : '<b>Acceso libre</b>';
+    document.getElementById("salir").hidden = !u;
+    var lista = entidades.slice().sort(function(a, b){ return (b.foco - a.foco) || a.nombre.localeCompare(b.nombre); });
+    state.animar = true;
+    document.getElementById("listaEnt").innerHTML = lista.map(function(e){ return '<option value="' + esc(e.nombre + (e.provincia ? " (" + e.provincia + ")" : "")) + '">'; }).join("");
+    render();
+  }
+  function mostrarLogin(){
+    document.getElementById("app").hidden = true;
+    document.getElementById("login").hidden = false;
+    document.getElementById("dni").focus();
+  }
+  document.getElementById("formLogin").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var dni = document.getElementById("dni").value.replace(/\D/g, ""), clave = document.getElementById("clave").value.trim();
+    var h = sha256(utf8(dni + ":" + clave));
+    var u = usuarios.filter(function(x){ return x.h === h; })[0];
+    if(!u){ document.getElementById("errLogin").textContent = "DNI o clave incorrectos. Si no tiene acceso, comuníquese con el administrador."; return; }
+    store("oc_sesion", h);
+    document.getElementById("errLogin").textContent = "";
+    entrar(u);
+  });
+  document.getElementById("salir").addEventListener("click", function(){ if(WEB){ window.__ocWebSalir(); return; } store("oc_sesion", ""); state.user = null; mostrarLogin(); });
+  document.getElementById("buscaEnt").addEventListener("change", function(){
+    var v = this.value.trim().toLowerCase();
+    var e = entidades.filter(function(x){ return (x.nombre + (x.provincia ? " (" + x.provincia + ")" : "")).toLowerCase() === v; })[0]
+         || entidades.filter(function(x){ return x.nombre.toLowerCase().indexOf(v) >= 0; })[0];
+    if(e){ state.entidad = e.id; store("oc_entidad", e.id); state.filtro = ""; state.estado = ""; state.lugar = ""; this.value = ""; state.animar = true; render(); }
+    else toast("No se encontró esa entidad.");
+  });
+  document.getElementById("volver").addEventListener("click", function(){ if(propia()){ state.entidad = propia(); state.animar = true; render(); } });
+  document.querySelectorAll(".accesos .acceso").forEach(function(b){
+    b.addEventListener("click", function(){ ir(b.dataset.tab); });
+  });
+
+  // ---------- render ----------
+  function cabecera(){
+    var e = ent(), mia = propia() === e.id;
+    document.getElementById("cabTipo").textContent = e.tipo + " · " + (e.provincia ? e.provincia + " · " : "") + e.region;
+    document.getElementById("cabNombre").textContent = e.nombre;
+    document.getElementById("cabMia").hidden = !mia;
+    document.getElementById("volver").hidden = !propia() || mia;
+    document.getElementById("pieFuente").innerHTML = fuente() + (D.generado ? " · actualizado " + esc(D.generado) : "");
+    var ns = noticiasEnt().slice(0, 10), t = document.getElementById("ticker");
+    t.hidden = !ns.length;
+    if(ns.length){
+      var items = ns.map(function(n){ return '<a href="' + esc(n.url) + '" target="_blank" rel="noopener">¡ ' + esc(n.titulo) + ' !</a>'; }).join("");
+      document.getElementById("cinta").innerHTML = items + items;
+    }
+  }
+  function ir(tab){ state.tab = tab; state.animar = true; render(); window.scrollTo({top: 0, behavior: "smooth"}); }
+  function contar(){
+    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    main.querySelectorAll(".kpi .val, .ir > div:first-child").forEach(function(el){
+      var m = el.textContent.match(/^(\D*?)([\d.,]+)(.*)$/);
+      if(!m || el.children.length > 1) return;
+      var txt = m[2], dec = (txt.split(".")[1] || "").length, fin = parseFloat(txt.replace(/,/g, ""));
+      if(!(fin > 0)) return;
+      var t0 = null, pre = m[1], suf = m[3], base = el.innerHTML;
+      function paso(t){
+        if(!t0) t0 = t;
+        var k = Math.min(1, (t - t0) / 900), v = fin * (1 - Math.pow(1 - k, 3));
+        el.textContent = pre + v.toLocaleString("es-PE", {minimumFractionDigits: dec, maximumFractionDigits: dec}) + suf;
+        if(k < 1) requestAnimationFrame(paso); else el.innerHTML = base;
+      }
+      requestAnimationFrame(paso);
+    });
+  }
+  function aplicarTema(t){
+    document.documentElement.setAttribute("data-tema", t);
+    document.querySelectorAll(".tema").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.t === t); });
+    store("oc_tema", t);
+  }
+  aplicarTema(store("oc_tema") || "azul");
+  document.querySelectorAll(".tema").forEach(function(b){ b.addEventListener("click", function(){ aplicarTema(b.dataset.t); }); });
+  function render(){
+    if(!state.entidad) return;
+    cabecera();
+    document.querySelectorAll(".accesos .acceso").forEach(function(b){
+      if(b.dataset.tab === state.tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+    });
+    var vistas = { resumen:vResumen, obras:vObras, semanal:vSemanal, noticias:vNoticias, pp:vPP };
+    main.innerHTML = (vistas[state.tab] || vResumen)();
+    if(state.animar){
+      state.animar = false;
+      main.classList.remove("animar"); void main.offsetWidth; main.classList.add("animar");
+      [].forEach.call(main.children, function(c, i){ c.style.animationDelay = (i * 70) + "ms"; });
+      [].forEach.call(main.querySelectorAll(".news"), function(c, i){ if(i < 20) c.style.animationDelay = (150 + i * 40) + "ms"; });
+      contar();
+    } else main.classList.remove("animar");
+    main.querySelectorAll("[data-ir-estado]").forEach(function(b){ b.onclick = function(){ state.estado = b.dataset.irEstado; state.filtro = ""; ir("obras"); }; b.onkeydown = function(ev){ if(ev.key === "Enter") b.onclick(); }; });
+    main.querySelectorAll("[data-ir-cui]").forEach(function(b){ b.onclick = function(){ state.filtro = b.dataset.irCui; state.estado = ""; ir("obras"); }; });
+    main.querySelectorAll("[data-go]").forEach(function(b){ b.onclick = function(){ ir(b.dataset.go); }; b.onkeydown = function(ev){ if(ev.key === "Enter") ir(b.dataset.go); }; });
+    main.querySelectorAll("[data-fav]").forEach(function(b){ b.onclick = function(){ toggleFav(b.dataset.fav); }; });
+    main.querySelectorAll("[data-nivel]").forEach(function(b){ b.onclick = function(){ state.nNivel = b.dataset.nivel; state.nTema = ""; render(); }; });
+    main.querySelectorAll("[data-tema]").forEach(function(b){ b.onclick = function(){ state.nTema = b.dataset.tema; render(); }; });
+    function vivo(id, campo){
+      var el = document.getElementById(id);
+      if(el) el.oninput = function(){ state[campo] = el.value; var pos = el.selectionStart; render(); var n = document.getElementById(id); n.focus(); n.setSelectionRange(pos, pos); };
+    }
+    vivo("q", "filtro"); vivo("nq", "nQ");
+    var lg = document.getElementById("lugar");
+    if(lg){ lg.onchange = function(){ state.lugar = lg.value.trim(); state.estado = ""; state.animar = true; render(); }; }
+    var ql = document.getElementById("limpiarLugar"); if(ql) ql.onclick = function(){ state.lugar = ""; state.estado = ""; render(); };
+    main.querySelectorAll("[data-lugar]").forEach(function(b){ b.onclick = function(){ state.lugar = (sinTilde(state.lugar) === sinTilde(b.dataset.lugar)) ? "" : b.dataset.lugar; state.estado = ""; state.animar = true; render(); }; });
+    main.querySelectorAll("[data-grupo]").forEach(function(b){ var fn = function(){ var g = "g:" + b.dataset.grupo; state.estado = state.estado === g ? "" : g; render(); }; b.onclick = fn; b.onkeydown = function(ev){ if(ev.key === "Enter") fn(); }; });
+    if(state.tab === "noticias" && !vistoGuardado){ vistoGuardado = true; store("oc_news_visto", new Date().toISOString().slice(0, 19) + "Z"); }
+    var fe = document.getElementById("fe");
+    if(fe){ fe.value = state.estado; fe.onchange = function(){ state.estado = fe.value; render(); }; }
+    var imp = document.getElementById("imprimir"); if(imp) imp.onclick = function(){ window.print(); };
+    main.querySelectorAll("[data-tipo]").forEach(function(b){ b.onclick = function(){ state.rkTipo = b.dataset.tipo; render(); }; });
+    var sa = main.querySelector("#rkAnio"); if(sa) sa.onchange = function(){ state.rkAnio = sa.value; render(); };
+    main.querySelectorAll("[data-rkamb]").forEach(function(b){ b.onclick = function(){ state.rkAmbito = b.dataset.rkamb; state.rkTodos = false; render(); }; });
+    main.querySelectorAll("[data-rktodos]").forEach(function(b){ b.onclick = function(){ state.rkTodos = !state.rkTodos; render(); }; });
+    main.querySelectorAll("[data-ppanio]").forEach(function(b){ b.onclick = function(){ state.ppAnio = b.dataset.ppanio; render(); }; });
+    main.querySelectorAll("[data-verent]").forEach(function(b){ b.onclick = function(){ state.entidad = b.dataset.verent; state.lugar = ""; state.estado = ""; state.filtro = ""; ir(state.tab === "pp" ? "obras" : state.tab); }; });
+    var cpp = document.getElementById("copiarPP");
+    if(cpp) cpp.onclick = function(){ var txt = textoPP(); try{ navigator.clipboard.writeText(txt).then(function(){ toast("Copiado. Péguelo en WhatsApp."); }, function(){ fallback(txt); }); }catch(e){ fallback(txt); } };
+    var cop = document.getElementById("copiar");
+    if(cop) cop.onclick = function(){
+      var txt = textoWhatsApp(reporte());
+      try{ navigator.clipboard.writeText(txt).then(function(){ toast("Reporte copiado. Péguelo en WhatsApp."); }, function(){ fallback(txt); }); }
+      catch(e){ fallback(txt); }
+    };
+  }
+  function fallback(txt){
+    var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast("Reporte copiado. Péguelo en WhatsApp."); }catch(e){ toast("No se pudo copiar."); }
+    document.body.removeChild(ta);
+  }
+
+  // ---------- inicio ----------
+  if(WEB){ entrar(window.OC_WEB_USUARIO); }
+  else if(!usuarios.length){ entrar(null); }
+  else{
+    var ses = store("oc_sesion"), u = ses && usuarios.filter(function(x){ return x.h === ses; })[0];
+    if(u) entrar(u); else mostrarLogin();
+  }
+};
+if(!window.__ocWebPendiente){ if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", window.__ocMain); else window.__ocMain(); }
+</script>
+</body>
+</html>
